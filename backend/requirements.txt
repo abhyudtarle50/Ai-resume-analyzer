@@ -1,0 +1,9 @@
+flask
+flask-cors
+flask-sqlalchemy
+sarvamai
+python-dotenv
+requests
+pdfminer.six
+gunicorn
+json-repair>=0.59.0

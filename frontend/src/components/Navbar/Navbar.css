@@ -1,0 +1,261 @@
+/* ============================================================
+   Navbar.css
+   ============================================================ */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding-inline: var(--space-6);
+  max-width: 1200px;
+  margin-inline: auto;
+  position: relative;
+  z-index: 1001;
+}
+
+/* ---- Logo / Brand ---- */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  z-index: 1002;
+}
+
+.navbar__logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--brand-start), var(--brand-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+.navbar__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.navbar__brand-name {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.navbar__brand-sub {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---- Nav links (Desktop) ---- */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.navbar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.navbar__link:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.navbar__link.active {
+  background: var(--brand-light);
+  color: var(--brand);
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  display: flex;
+}
+
+/* ---- Right controls ---- */
+.navbar__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  z-index: 1002;
+}
+
+/* ---- Theme toggle button ---- */
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.theme-toggle:hover {
+  background: var(--brand-light);
+  border-color: var(--brand);
+  color: var(--brand);
+  transform: translateY(-2px);
+}
+
+/* ---- Hamburger Button ---- */
+.navbar__hamburger {
+  display: none; /* Hidden on desktop by default */
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.navbar__hamburger:hover {
+  background: var(--brand-light);
+  color: var(--brand);
+}
+
+.navbar__hamburger.is-active {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+
+/* ---- Mobile Menu Overlay ---- */
+.navbar__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
+/* ---- Mobile Menu Dropdown ---- */
+.navbar__mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  padding: var(--space-4) var(--space-6) var(--space-8);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  border-bottom-left-radius: var(--radius-xl);
+  border-bottom-right-radius: var(--radius-xl);
+}
+
+.navbar__mobile-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.navbar__mobile-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: var(--bg-secondary);
+  transition: all var(--transition-base);
+}
+
+.navbar__mobile-link:hover,
+.navbar__mobile-link.active {
+  background: var(--brand);
+  color: white;
+}
+
+.navbar__mobile-link.active .nav-icon {
+  color: white;
+}
+
+.navbar__mobile-link .nav-icon {
+  color: var(--brand);
+  font-size: 1.5rem;
+}
+
+/* ---- Responsive Breakpoints ---- */
+@media (max-width: 768px) {
+  .navbar__inner {
+    height: 64px;
+    padding-inline: var(--space-4);
+  }
+
+  .navbar__links {
+    display: none; /* Hide horizontal links on mobile */
+  }
+
+  .navbar__hamburger {
+    display: flex; /* Show hamburger only on mobile */
+  }
+
+  .navbar__brand-name {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .navbar__links {
+    display: flex;
+  }
+  
+  .navbar__hamburger {
+    display: none;
+  }
+}
+

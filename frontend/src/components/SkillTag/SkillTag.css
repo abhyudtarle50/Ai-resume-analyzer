@@ -1,0 +1,59 @@
+/* ============================================================
+   SkillTag.css
+   ============================================================ */
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1.5px solid transparent;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  cursor: default;
+}
+
+/* Default variant — indigo brand */
+.skill-tag--default {
+  background: var(--brand-light);
+  color: var(--brand);
+  border-color: transparent;
+}
+.skill-tag--default:hover {
+  border-color: var(--brand);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+}
+
+/* Success — green */
+.skill-tag--success {
+  background: var(--success-light);
+  color: var(--success);
+}
+.skill-tag--success:hover {
+  border-color: var(--success);
+  transform: translateY(-1px);
+}
+
+/* Warning — amber */
+.skill-tag--warning {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+/* Info — blue */
+.skill-tag--info {
+  background: var(--info-light);
+  color: var(--info);
+}
+
+/* Container for a group of tags */
+.skill-tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

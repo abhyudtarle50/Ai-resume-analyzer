@@ -1,0 +1,70 @@
+/* ============================================================
+   ScoreRing.css  — Animated SVG ATS score ring
+   ============================================================ */
+
+.score-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.score-ring__svg {
+  transform: rotate(-90deg); /* start progress from top */
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+}
+
+.score-ring__track {
+  fill: none;
+  stroke: var(--border-color);
+  stroke-width: 10;
+}
+
+.score-ring__progress {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Colour the ring based on score range */
+.score-ring__progress--high   { stroke: #10b981; }  /* ≥ 80 → green  */
+.score-ring__progress--mid    { stroke: #f59e0b; }  /* 50–79 → amber */
+.score-ring__progress--low    { stroke: #ef4444; }  /* < 50 → red    */
+
+.score-ring__center {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring__wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring__value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.score-ring__label-inner {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.score-ring__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}

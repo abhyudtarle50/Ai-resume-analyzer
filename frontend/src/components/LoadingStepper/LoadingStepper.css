@@ -1,0 +1,99 @@
+/* ============================================================
+   LoadingStepper.css
+   ============================================================ */
+
+.loading-stepper-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-8);
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.progress-bar-container {
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-8);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--brand);
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease-out;
+}
+
+.loading-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.stepper-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.stepper-item--active {
+  opacity: 1;
+}
+
+.stepper-item--done {
+  opacity: 0.8;
+}
+
+.stepper-item__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+}
+
+.stepper-item--active .stepper-item__icon {
+  background: var(--brand-light);
+  color: var(--brand);
+  animation: pulse 2s infinite;
+}
+
+.stepper-item--done .stepper-item__icon {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.stepper-item__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stepper-item__label {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.stepper-item__hint {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+  animation: fadeUp 0.3s ease;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}

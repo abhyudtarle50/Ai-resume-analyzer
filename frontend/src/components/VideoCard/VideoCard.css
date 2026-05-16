@@ -1,0 +1,204 @@
+/* ============================================================
+   VideoCard.css — YouTube-style video card
+   ============================================================ */
+
+.video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--brand);
+}
+
+/* Thumbnail container — 16:9 aspect ratio */
+.video-card__thumbnail-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.video-card__thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.video-card:hover .video-card__thumbnail {
+  transform: scale(1.05);
+}
+
+/* Play button overlay */
+.video-card__play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.video-card:hover .video-card__play-overlay {
+  opacity: 1;
+}
+
+.video-card__play-btn {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 0, 0, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform var(--transition-fast);
+}
+
+.video-card:hover .video-card__play-btn {
+  transform: scale(1.1);
+}
+
+/* Content section */
+.video-card__content {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.video-card__skill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand);
+  background: var(--brand-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  align-self: flex-start;
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.video-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: var(--space-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.video-card__channel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.video-card__channel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  flex-shrink: 0;
+}
+
+/* Watch button */
+.video-card__footer {
+  margin-top: auto;
+}
+
+.video-card__button {
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: all var(--transition-fast);
+}
+
+.video-card:hover .video-card__button {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+
+/* Empty/placeholder thumbnail */
+.video-card__thumbnail--placeholder,
+.video-card__thumbnail--empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
+}
+
+.video-card__placeholder-icon {
+  font-size: 2.5rem;
+}
+
+/* Skeleton Loading State */
+.video-card--skeleton .video-card__thumbnail-container {
+  background: var(--bg-secondary);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.video-card--skeleton .skeleton-line {
+  height: 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.video-card--skeleton .skeleton-line--short {
+  width: 60%;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
