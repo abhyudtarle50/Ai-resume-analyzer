@@ -368,7 +368,7 @@ const History = () => {
             )}
 
             <AnimatePresence mode="popLayout">
-              {history.length === 0 ? (
+              {history.length === 0 && !error ? (
                 <motion.div 
                   key="empty"
                   className="history-empty"
@@ -401,10 +401,16 @@ const History = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => setSelectedRecord(record)}
+                      onClick={(e) => {
+                        if (e.target.closest('.btn-delete')) return;
+                        setSelectedRecord(record);
+                      }}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={(e) => e.key === "Enter" && setSelectedRecord(record)}
+                      onKeyDown={(e) => {
+                        if (e.target.closest('.btn-delete')) return;
+                        if (e.key === "Enter") setSelectedRecord(record);
+                      }}
                     >
                       <div className="history-card__header">
                         <div className="history-card__icon"><HiOutlineDocumentText /></div>
@@ -434,15 +440,17 @@ const History = () => {
                         </span>
                         <div className="history-card__actions">
                           <span className="history-card__view-label">View Details →</span>
-                          <motion.button
+                          <button
                             className="btn-delete"
-                            onClick={(e) => handleDelete(e, record.id)}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                            onPointerDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDelete(e, record.id);
+                            }}
                             aria-label="Delete analysis"
                           >
-                            <HiTrash />
-                          </motion.button>
+                            <HiTrash style={{ pointerEvents: "none" }} />
+                          </button>
                         </div>
                       </div>
                     </motion.div>

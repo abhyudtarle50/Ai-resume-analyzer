@@ -226,6 +226,51 @@ h1, h2, h3, h4, h5, h6 {
   margin-block: var(--space-6);
 }
 
+/* ---- Error Banner ---- */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: var(--danger-light);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-6);
+  color: var(--danger);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.error-banner__icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.error-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.error-banner__text p {
+  margin: 0;
+}
+
+.error-banner .btn-text {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity var(--transition-fast);
+}
+
+.error-banner .btn-text:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
 /* ---- Shared Results Summary Card ---- */
 .results-summary-card {
   background: linear-gradient(135deg, var(--brand-light) 0%, rgba(168, 85, 247, 0.1) 100%);

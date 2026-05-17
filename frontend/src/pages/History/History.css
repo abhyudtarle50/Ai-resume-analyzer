@@ -169,6 +169,9 @@
   border: none;
   cursor: pointer;
   transition: all var(--transition-fast);
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .btn-delete:hover {
