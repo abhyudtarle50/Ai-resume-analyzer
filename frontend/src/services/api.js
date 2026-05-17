@@ -27,7 +27,7 @@ import axios from "axios";
 // 1. Create the shared Axios instance
 // ---------------------------------------------------------------
 const api = axios.create({
-  baseURL: (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000") + "/api",
+  baseURL: (import.meta.env.VITE_API_BASE_URL || "https://ai-resume-analyzer-1-fw7l.onrender.com") + "/api",
   timeout: 120000, // 120 seconds — Sarvam AI pipeline can take a while
   headers: {
     "Content-Type": "application/json",
