@@ -1,0 +1,142 @@
+/* ============================================================
+   SampleResumes.css
+   ============================================================ */
+
+.sample-resumes {
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.sample-resumes__header {
+  margin-bottom: var(--space-4);
+  text-align: center;
+}
+
+.sample-resumes__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.sample-resumes__icon {
+  color: var(--brand);
+  font-size: 1.5rem;
+}
+
+.sample-resumes__subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 500px;
+  margin-inline: auto;
+  line-height: 1.5;
+}
+
+.sample-resumes__tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.sample-resumes__tab {
+  padding: var(--space-2) var(--space-5);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.sample-resumes__tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.sample-resumes__tab--active {
+  color: var(--brand);
+  background: var(--brand-light);
+  border-color: var(--brand);
+}
+
+.sample-resumes__content-wrapper {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.sample-resumes__actions {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 10;
+}
+
+.sample-resumes__copy-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-card);
+  backdrop-filter: blur(4px);
+  font-size: 0.85rem;
+  padding: var(--space-2) var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.sample-resumes__copy-btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background-color: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.sample-resumes__textarea {
+  width: 100%;
+  height: 300px;
+  padding: var(--space-5);
+  padding-top: var(--space-8);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: none;
+  resize: vertical;
+  outline: none;
+}
+
+.sample-resumes__textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sample-resumes__textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sample-resumes__textarea::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .sample-resumes__tabs {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}

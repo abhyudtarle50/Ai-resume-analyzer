@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ResumeInput from "../../components/ResumeInput/ResumeInput";
 import LoadingStepper from "../../components/LoadingStepper/LoadingStepper";
 import AtsScoreModule from "../../components/AtsScoreModule/AtsScoreModule";
+import SampleResumes from "./SampleResumes";
 import { analyzeResume } from "../../services/api";
 import "./Analyze.css";
 
@@ -179,6 +180,8 @@ const Analyze = () => {
                 <HiSparkles /> {state.inputData ? "Analyze Resume" : "Provide resume to analyze"}
               </motion.button>
             </div>
+
+            <SampleResumes />
           </motion.div>
         )}
 
