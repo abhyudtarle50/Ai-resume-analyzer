@@ -87,53 +87,83 @@ export const analyzeResume = async (input) => {
   // Analysis requests can take 30-90s depending on Sarvam AI load and resume length.
   // We set a generous 120s timeout to prevent premature "Network Error" failures.
   const analysisTimeout = 120000; 
+  let responseData;
+  let filename = "Pasted Text";
 
   if (input instanceof File) {
     const formData = new FormData();
     formData.append("resume", input);
+    filename = input.name;
     const response = await api.post("/analyze-resume", formData, {
       headers: { "Content-Type": "multipart/form-data" },
       timeout: analysisTimeout,
     });
-    return response.data;
+    responseData = response.data;
+  } else {
+    // Text mode — send as JSON
+    const response = await api.post("/analyze-resume", {
+      resume_text: input,
+    }, {
+      timeout: analysisTimeout,
+    });
+    responseData = response.data;
   }
 
-  // Text mode — send as JSON
-  const response = await api.post("/analyze-resume", {
-    resume_text: input,
-  }, {
-    timeout: analysisTimeout,
-  });
-  return response.data;
+  // Save to Local Storage instead of relying on the backend DB
+  if (responseData && responseData.status === "success") {
+    const newRecord = saveToHistoryLocal(responseData.analysis, filename);
+    responseData.record_id = newRecord.id; // Override with local ID
+  }
+
+  return responseData;
+};
+
+const LOCAL_STORAGE_KEY = "resume_analyzer_history";
+
+const saveToHistoryLocal = (analysisData, filename) => {
+  const history = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+  
+  const newRecord = {
+    id: Date.now().toString(),
+    filename: filename,
+    ats_score: analysisData.ats_score,
+    strengths: analysisData.strengths || [],
+    weaknesses: analysisData.weaknesses || [],
+    suggestions: analysisData.improvements || [],
+    skills: (analysisData.skills_to_learn || []).map(s => typeof s === 'string' ? s : s.skill),
+    roadmap: analysisData.summary || "",
+    rich_data: analysisData,
+    upload_date: new Date().toISOString()
+  };
+
+  history.unshift(newRecord); // Add to start
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(history));
+  return newRecord;
 };
 
 /**
  * getHistory
- * GET /history
+ * Returns history from local storage.
  *
  * @returns {Promise<object>}  { status, count, history: [...] }
- *
- * Usage:
- *   const { history } = await getHistory();
  */
 export const getHistory = async () => {
-  const response = await api.get("/history");
-  return response.data;
+  const history = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+  return { status: "success", count: history.length, history };
 };
 
 /**
  * deleteHistory
- * DELETE /history/<id>
+ * Removes record from local storage.
  *
- * @param {number} recordId  — the ID to delete
+ * @param {string|number} recordId  — the ID to delete
  * @returns {Promise<object>}  { status, message }
- *
- * Usage:
- *   await deleteHistory(3);
  */
 export const deleteHistory = async (recordId) => {
-  const response = await api.delete(`/history/${recordId}`);
-  return response.data;
+  let history = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+  history = history.filter(r => r.id !== recordId.toString());
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(history));
+  return { status: "success", message: "Record deleted." };
 };
 
 /**

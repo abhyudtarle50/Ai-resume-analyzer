@@ -98,39 +98,11 @@ def analyze_resume():
         return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
 
     # ----------------------------------------------------------
-    # 4. Save the result to the SQLite database
-    # ----------------------------------------------------------
-    try:
-        record = AnalysisHistory(
-            filename=original_filename,
-            ats_score=analysis.get("ats_score"),
-            strengths=analysis.get("strengths", []),
-            weaknesses=analysis.get("weaknesses", []),
-            suggestions=analysis.get("improvements", []),
-            skills=[s.get("skill", "") for s in analysis.get("skills_to_learn", [])],
-            roadmap=analysis.get("summary", ""), # Store summary in roadmap column temporarily
-            rich_data=analysis,
-        )
-        db.session.add(record)
-        db.session.commit()
-
-    except Exception as e:
-        db.session.rollback()
-        # Analysis still succeeded — log the DB error but don't fail the request
-        print(f"[DB ERROR] Could not save analysis to database: {e}")
-        return jsonify({
-            "status": "success",
-            "message": "Resume analyzed successfully (DB save failed).",
-            "record_id": None,
-            "analysis": analysis,
-        }), 200
-
-    # ----------------------------------------------------------
-    # 5. Return the full response
+    # 4. Return the full response (No database saving anymore)
     # ----------------------------------------------------------
     return jsonify({
         "status": "success",
-        "message": "Resume analyzed and saved successfully!",
-        "record_id": record.id,   # so the frontend can link to this record
+        "message": "Resume analyzed successfully!",
+        "record_id": None,   # Handled by frontend local storage now
         "analysis": analysis,
     }), 200
