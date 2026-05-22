@@ -134,7 +134,14 @@ const Analyze = () => {
       if (err.name === 'CanceledError' || err.message === 'canceled') {
         return;
       }
-      const msg = err.response?.data?.error || err.message || "Something went wrong. Please try again.";
+      let msg;
+      if (!err.response && err.message === 'Network Error') {
+        msg = "Could not reach the server. It may be waking up from sleep — please wait 30 seconds and click 'Try Again'.";
+      } else if (err.code === 'ECONNABORTED') {
+        msg = "The request timed out. The AI is taking longer than usual — please try again.";
+      } else {
+        msg = err.response?.data?.error || err.message || "Something went wrong. Please try again.";
+      }
       dispatch({ type: "ANALYSIS_ERROR", payload: msg });
     } finally {
       setIsDebouncing(false);

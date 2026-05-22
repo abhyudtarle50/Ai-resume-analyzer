@@ -73,51 +73,84 @@ api.interceptors.response.use(
 // ---------------------------------------------------------------
 
 /**
- * analyzeResume
- * POST /analyze-resume
- *
- * @param {File} file  — the PDF File object from an <input type="file">
- * @returns {Promise<object>}  analysis result from Sarvam AI + record_id
- *
- * Usage:
- *   const result = await analyzeResume(selectedFile);
- *   console.log(result.analysis.ats_score);
+ * wakeUpServer
+ * Pings the /health endpoint to wake up a sleeping Render free-tier server.
+ * Returns true if server is awake, false otherwise.
  */
+const wakeUpServer = async () => {
+  try {
+    await api.get("/health", { timeout: 60000 });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export const analyzeResume = async (input, options = {}) => {
   // Analysis requests can take 30-90s depending on Sarvam AI load and resume length.
-  // We set a generous 120s timeout to prevent premature "Network Error" failures.
-  const analysisTimeout = 120000; 
-  let responseData;
-  let filename = "Pasted Text";
+  // We set a generous 180s timeout to prevent premature "Network Error" failures.
+  const analysisTimeout = 180000; 
+  const MAX_RETRIES = 2;
+  let lastError;
 
-  if (input instanceof File) {
-    const formData = new FormData();
-    formData.append("resume", input);
-    filename = input.name;
-    const response = await api.post("/analyze-resume", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      timeout: analysisTimeout,
-      signal: options.signal,
-    });
-    responseData = response.data;
-  } else {
-    // Text mode — send as JSON
-    const response = await api.post("/analyze-resume", {
-      resume_text: input,
-    }, {
-      timeout: analysisTimeout,
-      signal: options.signal,
-    });
-    responseData = response.data;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      // On retry, wake up the server first (handles Render cold starts)
+      if (attempt > 0) {
+        console.log(`[RETRY] Attempt ${attempt + 1}: Waking up server...`);
+        await wakeUpServer();
+      }
+
+      let responseData;
+      let filename = "Pasted Text";
+
+      if (input instanceof File) {
+        const formData = new FormData();
+        formData.append("resume", input);
+        filename = input.name;
+        const response = await api.post("/analyze-resume", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: analysisTimeout,
+          signal: options.signal,
+        });
+        responseData = response.data;
+      } else {
+        // Text mode — send as JSON
+        const response = await api.post("/analyze-resume", {
+          resume_text: input,
+        }, {
+          timeout: analysisTimeout,
+          signal: options.signal,
+        });
+        responseData = response.data;
+      }
+
+      // Save to Local Storage instead of relying on the backend DB
+      if (responseData && responseData.status === "success") {
+        const newRecord = saveToHistoryLocal(responseData.analysis, filename);
+        responseData.record_id = newRecord.id; // Override with local ID
+      }
+
+      return responseData;
+    } catch (err) {
+      lastError = err;
+
+      // Don't retry if the user cancelled
+      if (err.name === 'CanceledError' || err.message === 'canceled') {
+        throw err;
+      }
+
+      // Only retry on network errors or timeouts (not on 4xx/5xx server errors)
+      const isNetworkError = !err.response && (err.message === 'Network Error' || err.code === 'ECONNABORTED');
+      if (!isNetworkError || attempt >= MAX_RETRIES) {
+        throw err;
+      }
+
+      console.warn(`[RETRY] Network error on attempt ${attempt + 1}, retrying...`);
+    }
   }
 
-  // Save to Local Storage instead of relying on the backend DB
-  if (responseData && responseData.status === "success") {
-    const newRecord = saveToHistoryLocal(responseData.analysis, filename);
-    responseData.record_id = newRecord.id; // Override with local ID
-  }
-
-  return responseData;
+  throw lastError;
 };
 
 const LOCAL_STORAGE_KEY = "resume_analyzer_history";
