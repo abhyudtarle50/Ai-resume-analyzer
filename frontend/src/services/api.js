@@ -83,7 +83,7 @@ api.interceptors.response.use(
  *   const result = await analyzeResume(selectedFile);
  *   console.log(result.analysis.ats_score);
  */
-export const analyzeResume = async (input) => {
+export const analyzeResume = async (input, options = {}) => {
   // Analysis requests can take 30-90s depending on Sarvam AI load and resume length.
   // We set a generous 120s timeout to prevent premature "Network Error" failures.
   const analysisTimeout = 120000; 
@@ -97,6 +97,7 @@ export const analyzeResume = async (input) => {
     const response = await api.post("/analyze-resume", formData, {
       headers: { "Content-Type": "multipart/form-data" },
       timeout: analysisTimeout,
+      signal: options.signal,
     });
     responseData = response.data;
   } else {
@@ -105,6 +106,7 @@ export const analyzeResume = async (input) => {
       resume_text: input,
     }, {
       timeout: analysisTimeout,
+      signal: options.signal,
     });
     responseData = response.data;
   }

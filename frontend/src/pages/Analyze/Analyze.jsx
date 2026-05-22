@@ -63,6 +63,7 @@ const Analyze = () => {
   const [state, dispatch] = useReducer(analyzeReducer, initialState, getInitialState);
   const [isDebouncing, setIsDebouncing] = useState(false);
   const resultsRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   // Persist state changes with a small debounce to prevent jank during rapid state updates
   useEffect(() => {
@@ -115,8 +116,10 @@ const Analyze = () => {
     setIsDebouncing(true);
     dispatch({ type: "START_ANALYSIS" });
 
+    abortControllerRef.current = new AbortController();
+
     try {
-      const data = await analyzeResume(state.inputData);
+      const data = await analyzeResume(state.inputData, { signal: abortControllerRef.current.signal });
 
       if (data.status === "success") {
         const filename = state.inputMode === "upload" ? state.inputData.name : "Pasted Text";
@@ -128,12 +131,24 @@ const Analyze = () => {
         throw new Error(data.error || "Unknown error from server.");
       }
     } catch (err) {
+      if (err.name === 'CanceledError' || err.message === 'canceled') {
+        return;
+      }
       const msg = err.response?.data?.error || err.message || "Something went wrong. Please try again.";
       dispatch({ type: "ANALYSIS_ERROR", payload: msg });
     } finally {
       setIsDebouncing(false);
+      abortControllerRef.current = null;
     }
   }, [state.inputData, state.inputMode, state.validationStatus, isDebouncing]);
+
+  const handleCancel = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    dispatch({ type: "RESET" });
+    setIsDebouncing(false);
+  }, []);
 
   const handleReset = useCallback(() => {
     dispatch({ type: "RESET" });
@@ -194,6 +209,9 @@ const Analyze = () => {
             layout
           >
             <LoadingStepper />
+            <div style={{ textAlign: "center", marginTop: "2rem" }}>
+              <button className="btn btn-outline" onClick={handleCancel}>Cancel Analysis</button>
+            </div>
           </motion.div>
         )}
 

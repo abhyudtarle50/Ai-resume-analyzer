@@ -36,7 +36,7 @@ def _get_client():
         api_key = os.getenv("SARVAM_API_KEY")
         if not api_key:
             raise ValueError("SARVAM_API_KEY not found in .env file")
-        _client = SarvamAI(api_subscription_key=api_key)
+        _client = SarvamAI(api_subscription_key=api_key, timeout=120.0)
     return _client
 
 
@@ -198,7 +198,7 @@ JSON SCHEMA (follow EXACTLY):
             raise Exception("API quota exceeded. Please wait a few minutes and try again.")
         elif "api_key" in err or "401" in err or "403" in err or "unauthorized" in err:
             raise Exception("Invalid API key. Please check SARVAM_API_KEY in your .env file.")
-        elif "timeout" in err or "deadline" in err:
-            raise Exception("Request timed out. Please try again.")
+        elif "timeout" in err or "timed out" in err or "deadline" in err:
+            raise Exception("The AI took too long to respond. Please try again with a shorter resume.")
         else:
             raise Exception(f"Analysis failed: {str(e)}")
