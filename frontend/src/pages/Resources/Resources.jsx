@@ -28,14 +28,57 @@ const Resources = () => {
     fetchHistory();
   }, []);
 
+  const fetchVideos = useCallback(async (params) => {
+    setLoading(true);
+    setError("");
+    
+    try {
+      const data = await getResources(params);
+      if (data.status === "success") {
+        setVideos(data.videos || []);
+      } else {
+        setError(data.message || "Failed to load resources.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || 
+        "An error occurred while fetching resources."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchVideosForSelection = useCallback(() => {
+    if (!recordId && !skillsParam) return;
+    
+    if (recordId) {
+      const record = history.find(h => h.id.toString() === recordId.toString());
+      if (record) {
+        setActiveFilename(record.filename);
+        const skillsList = record.skills || (record.rich_data?.skills_to_learn || []).map(s => typeof s === 'string' ? s : s.skill) || [];
+        if (skillsList.length > 0) {
+          fetchVideos({ skills: skillsList.join(",") });
+        } else {
+          setVideos([]);
+          setError("No skills identified in this resume to recommend tutorials for.");
+        }
+      } else if (!historyLoading) {
+        setError("Resume analysis record not found.");
+      }
+    } else {
+      fetchVideos({ skills: skillsParam });
+    }
+  }, [recordId, skillsParam, history, historyLoading, fetchVideos]);
+
   useEffect(() => {
     if (recordId || skillsParam) {
-      fetchVideos(recordId ? { record_id: recordId } : { skills: skillsParam });
+      fetchVideosForSelection();
     } else {
       setVideos([]);
       setActiveFilename("");
     }
-  }, [recordId, skillsParam]);
+  }, [recordId, skillsParam, fetchVideosForSelection]);
 
   useEffect(() => {
     if (filenameParam) {
@@ -56,35 +99,6 @@ const Resources = () => {
       setHistoryLoading(false);
     }
   }, []);
-
-  const fetchVideos = useCallback(async (params) => {
-    setLoading(true);
-    setError("");
-    
-    // Don't clear videos immediately if we're just updating
-    // setVideos([]); 
-    
-    try {
-      const data = await getResources(params);
-      if (data.status === "success") {
-        setVideos(data.videos || []);
-        if (params.record_id && !filenameParam) {
-          // Find filename from history if not in params
-          const record = history.find(h => h.id.toString() === params.record_id.toString());
-          if (record) setActiveFilename(record.filename);
-        }
-      } else {
-        setError(data.message || "Failed to load resources.");
-      }
-    } catch (err) {
-      setError(
-        err.response?.data?.message || 
-        "An error occurred while fetching resources."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [history, filenameParam]);
 
   const clearSelection = useCallback(() => {
     setSearchParams({});
@@ -166,7 +180,7 @@ const Resources = () => {
 
       <AnimatePresence mode="wait">
         {error && (
-          <ErrorMessage message={error} onRetry={() => { if (hasSelection) fetchVideos(recordId ? { record_id: recordId } : { skills: skillsParam }); }} />
+          <ErrorMessage message={error} onRetry={fetchVideosForSelection} />
         )}
       </AnimatePresence>
 

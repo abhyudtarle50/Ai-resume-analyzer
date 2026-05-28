@@ -297,7 +297,7 @@ const History = () => {
                       </div>
                     </div>
                     <Link 
-                      to={`/resources?record_id=${selectedRecord.id}&filename=${encodeURIComponent(selectedRecord.filename)}`}
+                      to={`/resources?skills=${encodeURIComponent((selectedRecord.skills || (selectedRecord.rich_data?.skills_to_learn || []).map(s => typeof s === 'string' ? s : s.skill)).join(","))}&filename=${encodeURIComponent(selectedRecord.filename)}`}
                       className="tutorials-cta__btn"
                     >
                       <HiAcademicCap /> Find Tutorials →
